@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Camera } from '@ionic-native/camera';
+import { Device } from "@ionic-native/device";
 
 import {HomeComponent} from "./home.component";
 import {IonicModule} from "ionic-angular";
@@ -15,7 +16,8 @@ import {IonicModule} from "ionic-angular";
         HomeComponent
     ],
     providers: [
-        Camera
+        Camera,
+        Device
     ]
 })
 export class HomeModule {}

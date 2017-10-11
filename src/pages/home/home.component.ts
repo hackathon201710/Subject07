@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
-import { NavParams } from 'ionic-angular';
-import { Camera, CameraOptions } from '@ionic-native/camera';
+import {Component} from '@angular/core';
+import {NavParams} from 'ionic-angular';
+import {Camera, CameraOptions} from '@ionic-native/camera';
+import {Device} from "@ionic-native/device";
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -17,19 +18,20 @@ export class HomeComponent {
 
     private static options: CameraOptions;
 
-  constructor(navParams: NavParams,
-              private camera: Camera) {
-      if (!this.imageUrl) {
-          HomeComponent.options = {
-              quality: 100,
-              destinationType: camera.DestinationType.FILE_URI,
-              encodingType: camera.EncodingType.JPEG,
-              mediaType: camera.MediaType.PICTURE,
-              correctOrientation: true
-          };
-          // this.getImage();
-      }
-  }
+    constructor(navParams: NavParams,
+                private camera: Camera,
+                private device: Device) {
+        if (!this.imageUrl) {
+            HomeComponent.options = {
+                quality: 100,
+                destinationType: camera.DestinationType.FILE_URI,
+                encodingType: camera.EncodingType.JPEG,
+                mediaType: camera.MediaType.PICTURE,
+                correctOrientation: true
+            };
+            // this.getImage();
+        }
+    }
 
     ionViewDidLoad(): void {
         let container = document.getElementById('graphContainer');
@@ -46,13 +48,16 @@ export class HomeComponent {
     }
 
     public get graphStyle() {
-      return "url(" + this.imageUrl + ")";
+        return "url(" + this.imageUrl + ")";
     }
 
     private getImage(): void {
         this.camera.getPicture(HomeComponent.options)
             .then((imageURI: string) => {
-              this.imageUrl = imageURI;
+                if (this.device.platform === 'iOS') {
+                    imageURI = imageURI.replace(/^file:\/\//, '');
+                }
+                this.imageUrl = imageURI;
             })
             .catch((exception) => {
                 if (exception === "cordova_not_available") {
