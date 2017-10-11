@@ -27,7 +27,7 @@ export class HomeComponent {
               mediaType: camera.MediaType.PICTURE,
               correctOrientation: true
           };
-          this.getImage();
+          // this.getImage();
       }
   }
 
