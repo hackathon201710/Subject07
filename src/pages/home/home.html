@@ -16,6 +16,6 @@
 </ion-header>
 
 <ion-content>
-    <div id="graphContainer" [style.background]="graphStyle" (click)="addMarker($event)">
+    <div id="graphContainer" [style.background]="graphStyle" (click)="showLabel($event)" ion-long-press [interval]="200" (onPressStart)="addMarker($event)">
     </div>
 </ion-content>

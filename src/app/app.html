@@ -9,9 +9,10 @@
 
     <ion-content>
         <ion-list>
-            <button ion-item menuClose="sideMenu" detail-none>
-                Arrow
-            </button>
+            <ion-item *ngFor="let marker of markers">
+                <ion-label>{{marker.text}}</ion-label>
+                <ion-label>{{marker.information}}</ion-label>
+            </ion-item>
         </ion-list>
     </ion-content>
 </ion-menu>

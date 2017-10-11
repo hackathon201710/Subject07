@@ -3,6 +3,8 @@ import { Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import {HomeComponent} from "../pages/home/home.component";
+import {Marker} from "../pages/storage/model/marker";
+import {StorageService} from "../pages/storage/storageService";
 
 @Component({
   templateUrl: 'app.html'
@@ -18,5 +20,9 @@ export class MyApp {
       statusBar.styleDefault();
       splashScreen.hide();
     });
+  }
+
+  public get markers(): Marker[] {
+      return StorageService.getAll().markers;
   }
 }

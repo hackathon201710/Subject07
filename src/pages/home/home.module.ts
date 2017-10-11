@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Camera } from '@ionic-native/camera';
-import { Device } from "@ionic-native/device";
+import { LongPressModule } from 'ionic-long-press';
 
 import {HomeComponent} from "./home.component";
 import {IonicModule} from "ionic-angular";
 
 @NgModule({
     imports: [
-        IonicModule.forRoot(HomeComponent)
+        IonicModule.forRoot(HomeComponent),
+        LongPressModule
     ],
     declarations: [
         HomeComponent
@@ -16,8 +17,7 @@ import {IonicModule} from "ionic-angular";
         HomeComponent
     ],
     providers: [
-        Camera,
-        Device
+        Camera
     ]
 })
 export class HomeModule {}

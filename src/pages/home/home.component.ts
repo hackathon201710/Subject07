@@ -3,6 +3,7 @@ import {Camera, CameraOptions} from '@ionic-native/camera';
 import {Marker} from "../storage/model/marker";
 import {StorageService} from "../storage/storageService";
 import {IStorageData} from "../storage/model/IStorageData";
+import { AlertController } from 'ionic-angular';
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -25,7 +26,10 @@ export class HomeComponent {
 
     private graph: any;
 
-    constructor(private camera: Camera) {
+    private label: any;
+
+    constructor(private camera: Camera,
+                private alertCtrl: AlertController) {
         if (!this.image64) {
             HomeComponent.options = {
                 quality: 100,
@@ -43,6 +47,7 @@ export class HomeComponent {
         this.graph = new mx.mxGraph(container);
         this.graph.cellsMovable = false;
         this.graph.cellsSelectable = false;
+        // this.graph.zoom(1.6);
         let style = this.graph.getStylesheet().getDefaultVertexStyle();
         style[mx.mxConstants.STYLE_VERTICAL_ALIGN] = "middle";
         style[mx.mxConstants.STYLE_STROKECOLOR] = "red";
@@ -55,20 +60,101 @@ export class HomeComponent {
         }
     }
 
-    public addMarker(event: MouseEvent): void {
+    public addMarker(event): void {
+        const header = document.getElementsByClassName("header");
+        const clickX = event.center.x - Marker.SIZE / 2;
+        const clickY = event.center.y - Marker.SIZE / 2 - header[0].clientHeight;
+        for (let i = 0; i < this.markers.length; i++) {
+            if (Math.abs(clickX - this.markers[i].x) < Marker.SIZE / 2 && Math.abs(clickY - this.markers[i].y) < Marker.SIZE / 2) {
+                event.preventDefault();
+                this.editMarker(i);
+                return;
+            }
+        }
         const parent = this.graph.getDefaultParent();
-        this.markers.push(new Marker(this.markers.length + 1, event.offsetX - 25, event.offsetY - 25));
+        this.markers.push(new Marker(this.markers.length + 1, clickX, clickY));
         StorageService.saveMarkers(this.markers);
         this.graph.getModel().beginUpdate();
-        this.graph.insertVertex(parent, null, this.markers.length, event.offsetX - 25, event.offsetY - 25, 50, 50, "shape=ellipse");
+        this.graph.insertVertex(parent, null, this.markers.length, clickX, clickY, Marker.SIZE, Marker.SIZE, "shape=ellipse");
         this.graph.getModel().endUpdate();
+    }
+
+    public showLabel(event): void {
+        const clickX = event.offsetX;
+        const clickY = event.offsetY;
+        const parent = this.graph.getDefaultParent();
+
+        if (this.label) {
+            console.warn(this.label.geometry.x, this.label.geometry.y);
+            this.graph.getModel().beginUpdate();
+            this.graph.removeCells([this.label]);
+            this.graph.getModel().endUpdate();
+        }
+
+        for (let i = 0; i < this.markers.length; i++) {
+            if (this.isSelectedMarker(clickX - Marker.SIZE / 2, clickY - Marker.SIZE / 2, this.markers[i])) {
+                if (this.markers[i].information) {
+                    this.graph.getModel().beginUpdate();
+                    let label = this.graph.insertVertex(parent, null, this.markers[i].information, clickX - Marker.SIZE / 2, (clickY - Marker.SIZE / 2) - 25, 80, 20, "autosize=1;fillColor=rgb(255, 0, 0)");
+                    this.label = label;
+                    this.graph.updateCellSize(label);
+                    this.graph.getModel().endUpdate();
+                }
+            }
+        }
+    }
+
+    public isSelectedMarker(clickX: number, clickY: number, marker: Marker): boolean {
+        return Math.abs(clickX - marker.x) < Marker.SIZE / 2 && Math.abs(clickY - marker.y) < Marker.SIZE / 2
+    }
+
+    private editMarker(index: number) {
+        const alert = this.alertCtrl.create({
+            title: 'Marker ' + (index + 1),
+            inputs: [
+                {
+                    name: 'text',
+                    placeholder: "information",
+                    value: this.markers[index].information
+                }
+            ],
+            buttons: [
+                {
+                    text: 'Save',
+                    handler: data => {
+                        this.markers[index].information = data.text;
+                        StorageService.saveMarkers(this.markers);
+                    }
+                },
+                {
+                    text: 'Remove',
+                    handler: () => {
+                        this.markers.splice(index, 1);
+                           for (let i = 0; i < this.markers.length; i++) {
+                            this.markers[i].text = i + 1;
+                        }
+                        StorageService.saveMarkers(this.markers);
+                        this.graph.destroy();
+                        this.ionViewDidLoad();
+                        this.restoreImage();
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    handler: () => {
+                    }
+                }
+            ]
+        });
+        alert.present();
     }
 
     public get graphStyle() {
         return "url(" + this.image64 + ")";
     }
 
-    private getImage(): void {
+    public getImage(): void {
         this.camera.getPicture(HomeComponent.options)
             .then((imageURI: string) => {
                 this.image64 = "data:image/jpeg;base64," + imageURI;
@@ -94,7 +180,7 @@ export class HomeComponent {
         this.markers = data.markers;
         this.graph.getModel().beginUpdate();
         for (let i = 0; i < this.markers.length; i++) {
-            this.graph.insertVertex(parent, null, i + 1, this.markers[i].x, this.markers[i].y, 50, 50, "shape=ellipse");
+            this.graph.insertVertex(parent, null, i + 1, this.markers[i].x, this.markers[i].y, Marker.SIZE, Marker.SIZE, "shape=ellipse");
         }
         this.graph.getModel().endUpdate();
     }

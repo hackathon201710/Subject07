@@ -13,7 +13,7 @@ export class StorageService {
     public static getAll(): IStorageData {
         return <IStorageData>{
             image: localStorage.getItem("image"),
-            markers: JSON.parse(localStorage.getItem("markers"))
+            markers: JSON.parse(localStorage.getItem("markers")) || []
         }
     }
 }
