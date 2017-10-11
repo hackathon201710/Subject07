@@ -1,7 +1,5 @@
-import {Component} from '@angular/core';
-import {NavParams} from 'ionic-angular';
-import {Camera, CameraOptions} from '@ionic-native/camera';
-import {Device} from "@ionic-native/device";
+import { Component } from '@angular/core';
+import {  Camera, CameraOptions } from '@ionic-native/camera';import {Device} from "@ionic-native/device";
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -18,20 +16,19 @@ export class HomeComponent {
 
     private static options: CameraOptions;
 
-    constructor(navParams: NavParams,
-                private camera: Camera,
-                private device: Device) {
-        if (!this.imageUrl) {
-            HomeComponent.options = {
-                quality: 100,
-                destinationType: camera.DestinationType.FILE_URI,
-                encodingType: camera.EncodingType.JPEG,
-                mediaType: camera.MediaType.PICTURE,
-                correctOrientation: true
-            };
-            // this.getImage();
-        }
-    }
+  constructor(
+              private camera: Camera,
+      private device: Device) {if (!this.imageUrl) {
+          HomeComponent.options = {
+              quality: 100,
+              destinationType: camera.DestinationType.FILE_URI,
+              encodingType: camera.EncodingType.JPEG,
+              mediaType: camera.MediaType.PICTURE,
+              correctOrientation: true
+          };
+          // this.getImage();
+      }
+  }
 
     ionViewDidLoad(): void {
         let container = document.getElementById('graphContainer');
