@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { NavParams } from 'ionic-angular';
+import { Camera, CameraOptions } from '@ionic-native/camera';
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -14,8 +15,20 @@ export class HomeComponent {
 
     public imageUrl: string;
 
-  constructor(navParams: NavParams) {
-      this.imageUrl = (<any>navParams).data.image;
+    private static options: CameraOptions;
+
+  constructor(navParams: NavParams,
+              private camera: Camera) {
+      if (!this.imageUrl) {
+          HomeComponent.options = {
+              quality: 100,
+              destinationType: camera.DestinationType.FILE_URI,
+              encodingType: camera.EncodingType.JPEG,
+              mediaType: camera.MediaType.PICTURE,
+              correctOrientation: true
+          };
+          this.getImage();
+      }
   }
 
     ionViewDidLoad(): void {
@@ -34,5 +47,19 @@ export class HomeComponent {
 
     public get graphStyle() {
       return "url(" + this.imageUrl + ")";
+    }
+
+    private getImage(): void {
+        this.camera.getPicture(HomeComponent.options)
+            .then((imageURI: string) => {
+              this.imageUrl = imageURI;
+            })
+            .catch((exception) => {
+                if (exception === "cordova_not_available") {
+                    this.imageUrl = "http://4.bp.blogspot.com/-kwJ03qEG-Eo/UGx2wiGauqI/AAAAAAAAXU0/6YnYqj8-nNM/s1600/funny-cat-pictures-018-030.jpg";
+                } else {
+                    console.error("Something went wrong...", exception);
+                }
+            });
     }
 }

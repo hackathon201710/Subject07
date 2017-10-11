@@ -5,15 +5,14 @@ import { MyApp } from './app.component';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
-
-import {CameraModule} from "../pages/camera/camera.module";
+import {HomeModule} from "../pages/home/home.module";
 
 @NgModule({
   declarations: [
     MyApp
   ],
   imports: [
-      CameraModule,
+      HomeModule,
     BrowserModule,
     IonicModule.forRoot(MyApp)
   ],
