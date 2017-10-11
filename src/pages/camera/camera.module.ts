@@ -2,8 +2,12 @@ import { NgModule } from '@angular/core';
 import { Camera } from '@ionic-native/camera';
 
 import {CameraComponent} from "./camera.component";
+import {HomeModule} from "../home/home.module";
 
 @NgModule({
+    imports: [
+        HomeModule
+    ],
     declarations: [
         CameraComponent
     ],
