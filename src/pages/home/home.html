@@ -1,15 +1,21 @@
 <ion-header>
-  <ion-navbar [hideBackButton]=true>
-    <ion-title>Home</ion-title>
-    <ion-buttons end>
-      <button (click)="getImage()" ion-button icon-only>
-        <ion-icon name="ios-camera"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-navbar>
+    <ion-navbar>
+        <button ion-button [menuToggle]="activeMenu">
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>
+            Home
+        </ion-title>
+
+        <ion-buttons end>
+            <button (click)="getImage()" ion-button icon-only>
+                <ion-icon name="ios-camera"></ion-icon>
+            </button>
+        </ion-buttons>
+    </ion-navbar>
 </ion-header>
 
 <ion-content>
-  <div id="graphContainer" [style.background]="graphStyle">
-  </div>
+    <div id="graphContainer" [style.background]="graphStyle" (click)="addMarker($event)">
+    </div>
 </ion-content>

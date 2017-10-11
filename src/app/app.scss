@@ -9,6 +9,10 @@
   color: #FFFFFF;
 }
 
-ion-buttons .bar-button-default-md {
+.bar-button-default-md {
   color: #FFFFFF;
+}
+
+.toolbar-md-secondary .toolbar-background-md {
+  background: $complementary-color;
 }
