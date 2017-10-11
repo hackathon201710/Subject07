@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { NavParams } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 
 declare const require: any;
@@ -17,8 +16,7 @@ export class HomeComponent {
 
     private static options: CameraOptions;
 
-  constructor(navParams: NavParams,
-              private camera: Camera) {
+  constructor(private camera: Camera) {
       if (!this.imageUrl) {
           HomeComponent.options = {
               quality: 100,
