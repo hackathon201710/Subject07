@@ -17,8 +17,6 @@ const mx = require("mxgraph")({
 })
 export class HomeComponent {
 
-    public activeMenu = "sideMenu";
-
     public image64: string;
 
     private static options: CameraOptions;
@@ -57,7 +55,7 @@ export class HomeComponent {
         style[mx.mxConstants.STYLE_FONTCOLOR] = "#FFFFFF";
         style[mx.mxConstants.STYLE_FONTSTYLE] = 1;
 
-        if (!this.image64) {
+       if (!this.image64) {
             this.restoreImage();
         }
     }

@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import {timeout} from "rxjs/operator/timeout";
 
 class Options {
     constructor(public privacy: boolean, public online: boolean) {
@@ -17,21 +16,15 @@ export class AboutComponent {
         if (!this.options) {
             this.options = new Options(
                 true,
-                localStorage.getItem("workOnline") === "true"
+                false
             );
         }
     }
 
-    public saveStuff(): void {
-        localStorage.setItem("workOnline", ""+this.options.online);
-    }
-
-    public undoChange(): void {
+    public undoChange(type): void {
         setTimeout( () => {
-            this.options.privacy = true;
+            this.options[type] = !this.options[type];
         }, 500);
-        // this.options.online = true;
-        // console.warn(this.options);
     }
 
 }
