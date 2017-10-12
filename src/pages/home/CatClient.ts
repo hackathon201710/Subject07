@@ -60,9 +60,17 @@ export class CatClient {
               `,
         })
             .then(data => {
+                let markers: Marker[] = [];
+                for(let marker of (<any>data).data.image.markers) {
+                    let newMarker: Marker = new Marker(marker.number, marker.x, marker.y);
+                    newMarker.id = marker.id;
+                    newMarker.information = marker.text;
+                    markers.push(newMarker);
+                }
+
                 return new SearchResult(
                     (<any>data).data.image.data,
-                    (<any>data).data.image.markers
+                    markers
                 );
             })
             .catch(error => console.error(error));
@@ -109,8 +117,7 @@ export class CatClient {
         this.apolloClient.mutate({
             mutation: gql`
                 mutation {
-                  removeMarker(id:"${markerId}"){
-                  }
+                  deleteMarker(id:"${markerId}")
                 }
               `,
         })

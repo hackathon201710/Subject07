@@ -142,6 +142,9 @@ export class HomeComponent {
                             this.markers[i].number = i + 1;
                         }
                         this.catClient.updateMarkers(this.markers);
+                        for(let marker of this.markers) {
+                            console.warn(marker);
+                        }
                         this.graph.destroy();
                         this.ionViewDidLoad();
                         this.restoreImage();
@@ -191,6 +194,8 @@ export class HomeComponent {
                 .then((result: SearchResult) => {
                     this.image64 = result.image;
                     this.markers = result.markers;
+                    this.graph.destroy();
+                    this.ionViewDidLoad();
                     this.restoreMarkers();
                 });
         }
