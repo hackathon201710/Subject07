@@ -37,8 +37,8 @@ export class CatClient {
             .catch(error => console.error(error));
     }
 
-    public addImage(data: String): void {
-        this.apolloClient.mutate({
+    public addImage(data: String): Promise<void> {
+        return this.apolloClient.mutate({
             mutation: gql`
                 mutation {
                   addImage(data:"${data}"){
@@ -48,7 +48,7 @@ export class CatClient {
               `,
         })
             .then(data => {
-                StorageService.saveImage((<any>data).data.addImage.id)
+                return Promise.resolve(StorageService.saveImage((<any>data).data.addImage.id));
             })
             .catch(error => console.error(error));
     }

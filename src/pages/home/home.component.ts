@@ -168,11 +168,13 @@ export class HomeComponent {
     public getImage(): void {
         this.camera.getPicture(HomeComponent.options)
             .then((imageURI: string) => {
-                this.catClient.addImage(this.image64);
-                this.markers = [];
-                this.image64 = null;
-                this.graph.destroy();
-                this.ionViewDidLoad();
+                this.image64 = "data:image/jpeg;base64," + imageURI;
+                this.catClient.addImage(this.image64).then(() => {
+                    this.markers = [];
+                    this.graph.destroy();
+                    this.ionViewDidLoad();
+                });
+
             })
             .catch((exception) => {
                 if (exception === "cordova_not_available") {
