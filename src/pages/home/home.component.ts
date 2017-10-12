@@ -201,6 +201,10 @@ export class HomeComponent {
                                 this.restoreMarkers();
                             }
                         })
+                        .catch(() => {
+                            this.image64 = HomeComponent.getCat();
+                            this.markers = [];
+                        })
                 })
                 .catch(() => {
                     this.image64 = HomeComponent.getCat();
