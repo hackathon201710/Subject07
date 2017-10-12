@@ -2,7 +2,7 @@
 <widget id="eu.meetup.hackathon" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>CrimeCat</name>
     <description>An awesome Ionic/Cordova app.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <author email="crime@katsAreBad.com" href="http://catsAreBad.com/">I am that good</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
