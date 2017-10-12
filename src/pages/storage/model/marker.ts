@@ -3,6 +3,8 @@ export class Marker {
 
     public information: string;
 
-    constructor(public text: string|number, public x: number, public y: number) {
+    public id: string;
+
+    constructor(public number: string|number, public x: number, public y: number) {
     }
 }

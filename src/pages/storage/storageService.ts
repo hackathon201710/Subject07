@@ -1,19 +1,12 @@
-import {Marker} from "./model/marker";
-import {IStorageData} from "./model/IStorageData";
-
 export class StorageService {
+
+    private static readonly IMAGEKEY = "image";
+
     public static saveImage(image: string): void {
-        localStorage.setItem("image", image);
+        localStorage.setItem(StorageService.IMAGEKEY, image);
     }
 
-    public static saveMarkers(markers: Marker[]) {
-        localStorage.setItem("markers", JSON.stringify(markers));
-    }
-
-    public static getAll(): IStorageData {
-        return <IStorageData>{
-            image: localStorage.getItem("image"),
-            markers: JSON.parse(localStorage.getItem("markers")) || []
-        }
+    public static getLastImage(): string {
+        return localStorage.getItem(StorageService.IMAGEKEY);
     }
 }

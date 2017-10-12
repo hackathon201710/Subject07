@@ -2,10 +2,9 @@ import {Component} from '@angular/core';
 import {Camera, CameraOptions} from '@ionic-native/camera';
 import {Marker} from "../storage/model/marker";
 import {StorageService} from "../storage/storageService";
-import {IStorageData} from "../storage/model/IStorageData";
 import {AlertController, NavController} from 'ionic-angular';
 import {AboutComponent} from "../about/about.component";
-import {CatClient} from "./CatClient";
+import {CatClient, SearchResult} from "./CatClient";
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -41,12 +40,11 @@ export class HomeComponent {
                 mediaType: camera.MediaType.PICTURE,
                 correctOrientation: true
             };
-            this.catClient = new CatClient();
         }
+        this.catClient = new CatClient();
     }
 
     ionViewDidLoad(): void {
-
         const container = document.getElementById('graphContainer');
         mx.mxEvent.disableContextMenu(container);
         this.graph = new mx.mxGraph(container);
@@ -60,7 +58,7 @@ export class HomeComponent {
         style[mx.mxConstants.STYLE_FONTCOLOR] = "#FFFFFF";
         style[mx.mxConstants.STYLE_FONTSTYLE] = 1;
 
-       if (!this.image64) {
+        if (!this.image64) {
             this.restoreImage();
         }
     }
@@ -77,11 +75,15 @@ export class HomeComponent {
             }
         }
         const parent = this.graph.getDefaultParent();
-        this.markers.push(new Marker(this.markers.length + 1, clickX, clickY));
-        StorageService.saveMarkers(this.markers);
-        this.graph.getModel().beginUpdate();
-        this.graph.insertVertex(parent, null, this.markers.length, clickX, clickY, Marker.SIZE, Marker.SIZE, "shape=ellipse");
-        this.graph.getModel().endUpdate();
+        const marker = new Marker(this.markers.length + 1, clickX, clickY);
+        this.catClient.addMarker(marker)
+            .then((markerID) => {
+                marker.id = markerID;
+                this.markers.push(marker);
+                this.graph.getModel().beginUpdate();
+                this.graph.insertVertex(parent, null, this.markers.length, clickX, clickY, Marker.SIZE, Marker.SIZE, "shape=ellipse");
+                this.graph.getModel().endUpdate();
+            });
     }
 
     public showLabel(event): void {
@@ -128,17 +130,18 @@ export class HomeComponent {
                     text: 'Save',
                     handler: data => {
                         this.markers[index].information = data.text;
-                        StorageService.saveMarkers(this.markers);
+                        this.catClient.updateMarkers([this.markers[index]]);
                     }
                 },
                 {
                     text: 'Remove',
                     handler: () => {
+                        this.catClient.removeMarker(this.markers[index].id);
                         this.markers.splice(index, 1);
-                           for (let i = 0; i < this.markers.length; i++) {
-                            this.markers[i].text = i + 1;
+                        for (let i = 0; i < this.markers.length; i++) {
+                            this.markers[i].number = i + 1;
                         }
-                        StorageService.saveMarkers(this.markers);
+                        this.catClient.updateMarkers(this.markers);
                         this.graph.destroy();
                         this.ionViewDidLoad();
                         this.restoreImage();
@@ -162,9 +165,11 @@ export class HomeComponent {
     public getImage(): void {
         this.camera.getPicture(HomeComponent.options)
             .then((imageURI: string) => {
-                this.image64 = "data:image/jpeg;base64," + imageURI;
                 this.catClient.addImage(this.image64);
-
+                this.markers = [];
+                this.image64 = null;
+                this.graph.destroy();
+                this.ionViewDidLoad();
             })
             .catch((exception) => {
                 if (exception === "cordova_not_available") {
@@ -177,14 +182,22 @@ export class HomeComponent {
     }
 
     private restoreImage(): void {
-        const data: IStorageData = StorageService.getAll();
-        if (!data.image) {
+        const id = StorageService.getLastImage();
+        if (!id) {
             this.image64 = HomeComponent.getCat();
+            this.markers = [];
         } else {
-            this.image64 = data.image;
+            this.catClient.getImage(id)
+                .then((result: SearchResult) => {
+                    this.image64 = result.image;
+                    this.markers = result.markers;
+                    this.restoreMarkers();
+                });
         }
+    }
+
+    private restoreMarkers() {
         const parent = this.graph.getDefaultParent();
-        this.markers = data.markers;
         this.graph.getModel().beginUpdate();
         for (let i = 0; i < this.markers.length; i++) {
             this.graph.insertVertex(parent, null, i + 1, this.markers[i].x, this.markers[i].y, Marker.SIZE, Marker.SIZE, "shape=ellipse");
