@@ -16,14 +16,9 @@ export class CatClient {
     constructor() {
         this.apolloClient = new ApolloClient({
             link: new HttpLink({
-                uri: 'http://192.168.0.65:3000/graphql',
+                uri: 'http://crimecat.herokuapp.com/graphql',
             })
         });
-        console.warn(new ApolloClient({
-            link: new HttpLink({
-                uri: 'http://192.168.0.65:3000/graphql',
-            })
-        }));
     }
 
     public addImage(data: String): void {
