@@ -21,6 +21,22 @@ export class CatClient {
         });
     }
 
+    public getNewestImage(): Promise<string> {
+        return this.apolloClient.query({
+            query: gql`
+                query {
+                  images {
+                    id
+                  }
+                }
+              `,
+        })
+            .then(data => {
+                return (<any>data).data.images[((<any>data).data.images).length].id;
+            })
+            .catch(error => console.error(error));
+    }
+
     public addImage(data: String): void {
         this.apolloClient.mutate({
             mutation: gql`

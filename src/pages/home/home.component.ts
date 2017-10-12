@@ -187,8 +187,26 @@ export class HomeComponent {
     private restoreImage(): void {
         const id = StorageService.getLastImage();
         if (!id) {
-            this.image64 = HomeComponent.getCat();
             this.markers = [];
+            this.catClient.getNewestImage()
+                .then((id: string) => {
+                    this.catClient.getImage(id)
+                        .then((result: SearchResult) => {
+                            if (!result) {
+                                this.image64 = HomeComponent.getCat();
+                                this.markers = [];
+                        }  else {
+                                this.image64 = result.image;
+                                this.markers = result.markers;
+                                this.restoreMarkers();
+                            }
+                        })
+                })
+                .catch(() => {
+                    this.image64 = HomeComponent.getCat();
+                    this.markers = [];
+                });
+
         } else {
             this.catClient.getImage(id)
                 .then((result: SearchResult) => {
