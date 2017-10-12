@@ -1,13 +1,13 @@
 <ion-header>
     <ion-navbar>
-        <button ion-button [menuToggle]="activeMenu">
-            <ion-icon name="menu"></ion-icon>
-        </button>
         <ion-title>
             Home
         </ion-title>
 
         <ion-buttons end>
+            <button (click)="goAbout()" ion-button icon-only>
+                <ion-icon name="md-information-circle"></ion-icon>
+            </button>
             <button (click)="getImage()" ion-button icon-only>
                 <ion-icon name="ios-camera"></ion-icon>
             </button>

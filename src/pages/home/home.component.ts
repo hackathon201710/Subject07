@@ -3,7 +3,8 @@ import {Camera, CameraOptions} from '@ionic-native/camera';
 import {Marker} from "../storage/model/marker";
 import {StorageService} from "../storage/storageService";
 import {IStorageData} from "../storage/model/IStorageData";
-import { AlertController } from 'ionic-angular';
+import {AlertController, NavController} from 'ionic-angular';
+import {AboutComponent} from "../about/about.component";
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -29,7 +30,8 @@ export class HomeComponent {
     private label: any;
 
     constructor(private camera: Camera,
-                private alertCtrl: AlertController) {
+                private alertCtrl: AlertController,
+                private navCtrl: NavController) {
         if (!this.image64) {
             HomeComponent.options = {
                 quality: 100,
@@ -183,6 +185,10 @@ export class HomeComponent {
             this.graph.insertVertex(parent, null, i + 1, this.markers[i].x, this.markers[i].y, Marker.SIZE, Marker.SIZE, "shape=ellipse");
         }
         this.graph.getModel().endUpdate();
+    }
+
+    public goAbout(): void {
+        this.navCtrl.push(AboutComponent);
     }
 
 

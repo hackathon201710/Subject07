@@ -1,11 +1,41 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      About
+      About CrimeCat
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
+  <img src="http://placehold.it/200x200"/>
 
+  <div class="information">
+      <p>This awesome app was created for the Police hackathon in Sweden and should only be used as a demonstrator.
+          With this app you can create a picture and annotate important parts on the picture. The image is automatically
+          synchronized, so that you can work with multiple colleagues at the same time
+      <br><br>
+      <b>No Cats were hurt in the making of this app.</b>
+      </p>
+  </div>
+    <div class="options">
+        <b>Configure the cat out of it</b>
+        <ion-list>
+
+            <ion-item>
+                <ion-label>I give up my privacy</ion-label>
+                <ion-toggle [(ngModel)]="options.privacy" (ngModelChange)="undoChange()"></ion-toggle>
+            </ion-item>
+
+            <ion-item>
+                <ion-label>Work online</ion-label>
+                <ion-toggle [(ngModel)]="options.online" (ngModelChange)="saveStuff()"></ion-toggle>
+            </ion-item>
+
+        </ion-list>
+    </div>
+    <div class="version">
+        <p>
+            v1.0.0.2.46.7
+        </p>
+    </div>
 </ion-content>

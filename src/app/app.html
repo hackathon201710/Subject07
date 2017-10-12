@@ -1,18 +1,1 @@
-<ion-nav [root]="root" #content></ion-nav>
-
-<ion-menu [content]="content" id="sideMenu">
-    <ion-header>
-        <ion-toolbar color="secondary">
-            <ion-title>Toolbar</ion-title>
-        </ion-toolbar>
-    </ion-header>
-
-    <ion-content>
-        <ion-list>
-            <ion-item *ngFor="let marker of markers">
-                <ion-label>{{marker.text}}</ion-label>
-                <ion-label>{{marker.information}}</ion-label>
-            </ion-item>
-        </ion-list>
-    </ion-content>
-</ion-menu>
+<ion-nav [root]="root"></ion-nav>
