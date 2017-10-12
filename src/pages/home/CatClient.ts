@@ -32,7 +32,10 @@ export class CatClient {
               `,
         })
             .then(data => {
-                return (<any>data).data.images[((<any>data).data.images).length].id;
+                if ((<any>data).data.images.length === 0) {
+                    return null;
+                }
+                return (<any>data).data.images[((<any>data).data.images).length-1].id;
             })
             .catch(error => console.error(error));
     }
@@ -84,7 +87,10 @@ export class CatClient {
                     markers
                 );
             })
-            .catch(error => console.error(error));
+            .catch(error => {
+                console.error(error)
+                return Promise.reject("");
+            });
     }
 
     public addMarker(marker: Marker): Promise<string> {
