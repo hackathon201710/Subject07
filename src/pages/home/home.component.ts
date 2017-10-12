@@ -147,7 +147,7 @@ export class HomeComponent {
                         }
                         this.graph.destroy();
                         this.ionViewDidLoad();
-                        this.restoreImage();
+                        this.restoreMarkers();
                     }
                 },
                 {
