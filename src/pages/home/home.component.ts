@@ -97,7 +97,7 @@ export class HomeComponent {
             if (this.isSelectedMarker(clickX - Marker.SIZE / 2, clickY - Marker.SIZE / 2, this.markers[i])) {
                 if (this.markers[i].information) {
                     this.graph.getModel().beginUpdate();
-                    let label = this.graph.insertVertex(parent, null, this.markers[i].information, clickX - Marker.SIZE / 2, (clickY - Marker.SIZE / 2) - 25, 80, 20, "autosize=1;fillColor=rgb(255, 0, 0)");
+                    let label = this.graph.insertVertex(parent, null, this.markers[i].information, this.markers[i].x - Marker.SIZE / 2, (this.markers[i].y - Marker.SIZE / 2) - 8, 80, 20, "autosize=1;fillColor=rgb(255, 0, 0)");
                     this.label = label;
                     this.graph.updateCellSize(label);
                     this.graph.getModel().endUpdate();

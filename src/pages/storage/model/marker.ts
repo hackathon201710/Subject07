@@ -1,5 +1,5 @@
 export class Marker {
-    public static readonly SIZE = 20;
+    public static readonly SIZE = 30;
 
     public information: string;
 
