@@ -5,6 +5,7 @@ import {StorageService} from "../storage/storageService";
 import {IStorageData} from "../storage/model/IStorageData";
 import {AlertController, NavController} from 'ionic-angular';
 import {AboutComponent} from "../about/about.component";
+import {CatClient} from "./CatClient";
 
 declare const require: any;
 const mx = require("mxgraph")({
@@ -27,6 +28,8 @@ export class HomeComponent {
 
     private label: any;
 
+    private catClient: CatClient;
+
     constructor(private camera: Camera,
                 private alertCtrl: AlertController,
                 private navCtrl: NavController) {
@@ -38,10 +41,12 @@ export class HomeComponent {
                 mediaType: camera.MediaType.PICTURE,
                 correctOrientation: true
             };
+            this.catClient = new CatClient();
         }
     }
 
     ionViewDidLoad(): void {
+
         const container = document.getElementById('graphContainer');
         mx.mxEvent.disableContextMenu(container);
         this.graph = new mx.mxGraph(container);
@@ -158,11 +163,13 @@ export class HomeComponent {
         this.camera.getPicture(HomeComponent.options)
             .then((imageURI: string) => {
                 this.image64 = "data:image/jpeg;base64," + imageURI;
-                StorageService.saveImage(imageURI);
+                this.catClient.addImage(this.image64);
+
             })
             .catch((exception) => {
                 if (exception === "cordova_not_available") {
                     this.image64 = HomeComponent.getCat();
+                    this.catClient.addImage(this.image64);
                 } else {
                     console.error("Something went wrong...", exception);
                 }
