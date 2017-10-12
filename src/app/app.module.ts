@@ -4,7 +4,6 @@ import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 
 import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
 import {HomeModule} from "../pages/home/home.module";
 
 @NgModule({
@@ -22,7 +21,6 @@ import {HomeModule} from "../pages/home/home.module";
   ],
   providers: [
     StatusBar,
-    SplashScreen,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
